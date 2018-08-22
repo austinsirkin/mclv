@@ -1,0 +1,19 @@
+{% extends 'main.twig' %}
+
+{% block topnav %}
+<table style="width: 40%"><tr><td align="right"><a href="http://www.mailchimp.com">visit mailchimp</a></td></tr></table>
+{% endblock topnav %}
+
+{% block content %}
+<table style="outline: thin solid; width: 40%">
+<tr bgcolor="#6DC5DC"><th height="30">Please Enter a <sub><img src="/austin/mclogo.png" alt="MailChimp" height="20" width="80"></sub> API Key</th></tr>
+<tr style="outline: thin solid"><td><br>
+
+<form action="{{ urlFor('lists') }}" method="post">
+<center><input type="text" size="60" name="apikey"></center>
+<br>
+<center><input type="submit"></center>
+</form>
+</td></tr>
+</table>
+{% endblock content %}

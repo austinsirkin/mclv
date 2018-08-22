@@ -1,0 +1,53 @@
+{% extends 'main.twig' %}
+
+{% block topnav %}
+<table style="width: 40%">
+<tr>
+<td><a href="{{ urlFor('index') }}">back</a></td>
+<td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
+</tr>
+</table>
+{% endblock topnav %}
+
+
+
+{% block content %}
+{% if json["title"] %}
+<table style="outline: thin solid; width: 40%; border-collapse: collapse">
+<tr bgcolor="#6DC5DC">
+<td width="100%"><b>ERROR</b></td><tr><td>
+Status: {{ json["status"] }}: {{ json["title"] }}
+</tr>
+</table>
+{% elseif not json %}
+<table style="outline: thin solid; width: 40%; border-collapse: collapse">
+<tr bgcolor="#6DC5DC">
+<td width="100%"><b>ERROR</b></td><tr><td>
+MY NAME IS ERROR
+IT'S A SECRET TO EVERYONE
+</tr>
+</table>
+{% else %}
+<table style="outline: thin solid; width: 40%; border-collapse: collapse">
+<tr bgcolor="#6DC5DC">
+<td width="50%"><b>List Names</b></td>
+<td width="30%"><b>List IDs</b></td>
+<td width="20%"><b>Subscribers</b></td>
+</tr>
+</table>
+
+<table style="outline: thin solid; width: 40%">
+
+
+
+{% set totalitems = json["total_items"]%}
+
+{% for i in 0..totalitems %}
+<tr style="outline: thin solid">
+<td width="50%">{{ json["lists"][i]["name"] }}</td>
+<td width="30%">{{ json["lists"][i]["id"] }}</td>
+<td width="20%">{{ json["lists"][i]["stats"]["member_count"] }}</td>
+</tr>
+  {% endfor %}
+{% endif %}
+{% endblock content %}
