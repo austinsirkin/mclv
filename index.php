@@ -15,25 +15,23 @@ $view->parserOptions = array(
 $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
 );
-include '/classes/error.php';
+
 include '/classes/url.php';
 
     session_start();
     
+   $app->get('/lists', function() use($app){
+		$apikey = $_SESSION['apikey'];
+		$pageSize = 100;
+		$shard = substr($apikey, 33, strlen($apikey));
+		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
+		$json = json_decode(call($url, $apikey), 1);
 
-
-
-
-
-
-
-
-
-
-   $app->get('/lists', function() use($app){   
-		$app->render('lists.twig', array(
-'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())   ));     
-
+	$app->render('lists.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
+		'api' => $apikey,
+		'json' => $json
+));     
 })->name('lists');
 
 
@@ -41,10 +39,9 @@ include '/classes/url.php';
 	 unset($_SESSION['json']);
 	 unset($_SESSION['apikey']);
 	 $app->render('index.twig', array(
-		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()) ));
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())
+));
 })->name('index');
-
-
 
 
 	$app->post('/lists', function() use($app){
@@ -52,15 +49,54 @@ include '/classes/url.php';
 		$pageSize = 100;
 		$shard = substr($apikey, 33, strlen($apikey));
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
-	
 		$json = json_decode(call($url, $apikey), 1);
-		$app->render('lists.twig', array(
-'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
-'api' => $apikey,
-'json' => $json
+		$_SESSION['apikey'] = $apikey;
+
+	$app->render('lists.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
+		'api' => $apikey,
+		'json' => $json
 ));     
 
               });
+
+	
+ $app->get('/members', function() use($app){   
+	$apikey = $_SESSION['apikey'];
+	$pageSize = 100;
+	$shard = substr($apikey, 33, strlen($apikey));
+	$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
+	$json = json_decode(call($url, $apikey), 1);	
+	
+	$app->render('members.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())   
+));     
+})->name('members');
+
+
+ $app->post('/members', function() use($app){   
+		$apikey = $_SESSION['apikey'];
+		$listId = $app->request->post("list");
+		$pageSize = 100;
+		$shard = substr($apikey, 33, strlen($apikey));
+		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists/" . $listId . '/members?count=9999';
+		$json = json_decode(call($url, $apikey), 1);
+	$app->render('members.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
+		'api' => $apikey,
+		'json' => $json
+));
+});
+
+
+
+
+
+ $app->get('/sword', function() use($app){   
+	$app->render('sword.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())   
+));     
+})->name('sword');
 
 
 

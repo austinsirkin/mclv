@@ -3,13 +3,11 @@
 {% block topnav %}
 <table style="width: 40%">
 <tr>
-<td><a href="{{ urlFor('index') }}">back</a></td>
+<td><a href="{{ urlFor('lists') }}">back</a></td>
 <td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
 </tr>
 </table>
 {% endblock topnav %}
-
-
 
 {% block content %}
 {% if json["title"] %}
@@ -25,33 +23,27 @@ Status: {{ json["status"] }}: {{ json["title"] }}
 <td width="100%"><b>ERROR</b></td><tr><td>
 MY NAME IS ERROR
 IT'S A SECRET TO EVERYONE
+IT'S DANGEROUS TO GO ALONE; TAKE <a href="{{ urlFor('sword') }}">THIS</a>
 </tr>
 </table>
 {% else %}
 <table style="outline: thin solid; width: 40%; border-collapse: collapse">
 <tr bgcolor="#6DC5DC">
-<td width="40%"><b>List Names</b></td>
-<td width="20%"><b>List IDs</b></td>
-<td width="2%"><b>Subscribers</b></td>
-<td width="2%"></td>
+<td width="70%"><b>Email Addresses</b></td>
+<td width="30%"><b>Status</b></td>
 </tr>
+</table>
+
+<table style="outline: thin solid; width: 40%">
 
 
 
-
-{% set totalitems = (json["total_items"] - 1) %}
+{% set totalitems = json["total_items"]%}
 
 {% for i in 0..totalitems %}
 <tr style="outline: thin solid">
-<td width="40%">{{ json["lists"][i]["name"] }}</td>
-<td width="20%">{{ json["lists"][i]["id"] }}</td>
-<td width="2%">{{ json["lists"][i]["stats"]["member_count"] }}</td>
-<td width="10%" align="right">
-<form action="{{ urlFor('members') }}" method="post">
- <input type="hidden" name="list" value="{{ json["lists"][i]["id"] }}"> 
-  <input type="submit" value="View">
-</form>
-</td>
+<td width="70%">{{ json["members"][i]["email_address"] }}</td>
+<td width="30%">{{ json["members"][i]["status"] }}</td>
 </tr>
   {% endfor %}
 {% endif %}
