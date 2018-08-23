@@ -4,6 +4,9 @@
 <table style="width: 40%">
 <tr>
 <td><a href="{{ urlFor('index') }}">back</a></td>
+<td><center>
+Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_items'] }}
+</td></center>
 <td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
 </tr>
 </table>
@@ -43,15 +46,9 @@ IT'S A SECRET TO EVERYONE
 
 {% for i in 0..totalitems %}
 <tr style="outline: thin solid">
-<td width="40%">{{ json["lists"][i]["name"] }}</td>
+<td width="40%"><a href="{{ urlFor('members')}}?listId={{ json["lists"][i]["id"] }}&offset=0">{{ json["lists"][i]["name"] }}</a></td>
 <td width="20%">{{ json["lists"][i]["id"] }}</td>
 <td width="2%">{{ json["lists"][i]["stats"]["member_count"] }}</td>
-<td width="10%" align="right">
-<form action="{{ urlFor('members') }}" method="post">
- <input type="hidden" name="list" value="{{ json["lists"][i]["id"] }}"> 
-  <input type="submit" value="View">
-</form>
-</td>
 </tr>
   {% endfor %}
 {% endif %}

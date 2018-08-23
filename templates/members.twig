@@ -4,6 +4,13 @@
 <table style="width: 40%">
 <tr>
 <td><a href="{{ urlFor('lists') }}">back</a></td>
+<td><center>
+{% if ((offset) >= json['total_items'] - pageSize) %}
+Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_items'] }}
+{% else %}
+Displaying {{ (offset + 1) }} &#8212; {{ (offset + pageSize) }} of {{ json['total_items'] }}
+{% endif %}
+</td></center>
 <td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
 </tr>
 </table>
@@ -38,9 +45,9 @@ IT'S DANGEROUS TO GO ALONE; TAKE <a href="{{ urlFor('sword') }}">THIS</a>
 
 
 
-{% set totalitems = json["total_items"]%}
+{% set totalitems = (json["total_items"] - 1) %}
 
-{% for i in 0..totalitems %}
+{% for i in 0..(pageSize - 1) %}
 <tr style="outline: thin solid">
 <td width="70%">{{ json["members"][i]["email_address"] }}</td>
 <td width="30%">{{ json["members"][i]["status"] }}</td>
@@ -48,3 +55,45 @@ IT'S DANGEROUS TO GO ALONE; TAKE <a href="{{ urlFor('sword') }}">THIS</a>
   {% endfor %}
 {% endif %}
 {% endblock content %}
+
+{% block botnav %}
+<table style="width: 40%">
+<tr>
+
+{% if ((json['total_items'] - pageSize) <= 0) %}
+<td></td>
+{% elseif (offset <= 0) %}
+<td></td>
+{% elseif (offset >= (json['total_items'] - pageSize)) %}
+<td>
+<a href="{{ urlFor('members') }}?listId={{ listId }}&offset={{ offset - pageSize }}">prev</a>
+</td>
+{% elseif (offset > 0) %}
+<td>
+<a href="{{ urlFor('members') }}?listId={{ listId }}&offset={{ offset - pageSize }}">prev</a>
+</td>
+{% endif %}
+<td>
+<center>
+{% if ((offset) >= json['total_items'] - pageSize) %}
+Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_items'] }}
+{% else %}
+Displaying {{ (offset + 1) }} &#8212; {{ (offset + pageSize) }} of {{ json['total_items'] }}
+{% endif %}
+</center>
+</td>
+{% if ((json['total_items'] - pageSize) <= 0) %}
+<td></td>
+{% elseif (offset <= 0) %}
+<td align="right"><a href="{{ urlFor('members') }}?listId={{ listId }}&offset={{ offset + pageSize }}">next</a></td>
+{% elseif (offset >= (json['total_items'] - pageSize)) %}
+<td></td>
+{% elseif (offset > 0) %}
+<td>
+<td align="right"><a href="{{ urlFor('members') }}?listId={{ listId }}&offset={{ offset + pageSize }}">next</a></td>
+</td>
+{% endif %}
+
+</tr>
+</table>
+{% endblock botnav %}
