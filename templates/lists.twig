@@ -5,7 +5,11 @@
 <tr>
 <td><a href="{{ urlFor('index') }}">back</a></td>
 <td><center>
+{% if json['total_items'] %}
 Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_items'] }}
+{% elseif not json['total_items'] %}
+Displaying ? &#8212; ?? of ???
+{% endif %}
 </td></center>
 <td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
 </tr>
@@ -53,3 +57,6 @@ IT'S A SECRET TO EVERYONE
   {% endfor %}
 {% endif %}
 {% endblock content %}
+
+{% block botnav %}
+{% endblock botnav %}

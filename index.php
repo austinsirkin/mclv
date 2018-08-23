@@ -76,6 +76,12 @@ include '/classes/url.php';
 	$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists/" . $listId . '/members?count=' . $pageSize . '&offset=' . $offset;
 	$json = json_decode(call($url, $apikey), 1);	
 	
+	if ($offset < 0) {
+		$offset = 0;
+	} elseif ($offset > ($json["total_items"] - $pageSize)) {
+		$offset = ($json["total_items"] - $pageSize);
+	}
+
 	$app->render('members.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'json' => $json,
