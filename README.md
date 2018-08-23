@@ -1,6 +1,6 @@
 # Project Title
 
-I call this "MC List Viewer 2.0", which is a good description of what it does. It's the second version, redesigned from the group up using the Slim framework and Twig templates.
+I call this "MC List Viewer 2.0", which is a good description of what it does. It's the second version, redesigned from the ground up using the Slim framework and Twig templates.
 
 ## Getting Started
 
