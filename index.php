@@ -1,10 +1,9 @@
 <?php
 
+require __DIR__ . '/vendor/autoload.php';
 
-    require __DIR__ . '/vendor/autoload.php';
-
-    $app = new \Slim\Slim(array(
-        'view' => new \Slim\Views\Twig()
+$app = new \Slim\Slim(array(
+    'view' => new \Slim\Views\Twig()
     ));
 
 $view = $app->view();
@@ -26,9 +25,9 @@ session_start();
     $app->get('/', function() use($app){
 	 unset($_SESSION['json']);
 	 unset($_SESSION['apikey']);
-	 $app->render('index.twig', array(
+	 $app->render('index.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())
-	));
+	]);
 })->name('index');
 
 
@@ -42,13 +41,13 @@ session_start();
 		$json = json_decode(call($url, $apikey), 1);
 		$jsonCount = count($json['lists']);
 
-	$app->render('lists.twig', array(
+	$app->render('lists.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'api' => $apikey,
 		'json' => $json,
 		'pageSize' => $jsonCount,
 		'offset' => $offset
-	));     
+	]);     
 })->name('lists');
 
 
@@ -62,13 +61,13 @@ session_start();
 		$_SESSION['apikey'] = $apikey;
 		$jsonCount = count($json['lists']);
 
-	$app->render('lists.twig', array(
+	$app->render('lists.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'api' => $apikey,
 		'json' => $json,
 		'pageSize' => $jsonCount,
 		'offset' => $offset
-	));     
+	]);     
 });
 
 // Routing for GET and POST versions of the Members page.
@@ -87,14 +86,14 @@ session_start();
 		$offset = ($json["total_items"] - $jsonCount);
 	}
 	$jsonCount = count($json['members']);
-	$app->render('members.twig', array(
+	$app->render('members.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'json' => $json,
 		'pageSize' => $pageSize,
 		'offset' => $offset,
 		'listId' => $listId,
 		'jsonCount' => $jsonCount		
-	));     
+	]);     
 })->name('members');
 
 
@@ -114,25 +113,24 @@ session_start();
 		$offset = ($json["total_items"] - $jsonCount);
 	}
 		$jsonCount = count($json['members']);
-	$app->render('members.twig', array(
+	$app->render('members.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'json' => $json,
 		'pageSize' => $pageSize,
 		'offset' => $offset,
 		'listId' => $listId,
 		'jsonCount' => $jsonCount
-	));
+	]);
 });
 
 
 // A little easter egg, for fun. :D
  $app->get('/sword', function() use($app){   
-	$app->render('sword.twig', array(
+	$app->render('sword.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())   
-	));     
+	]);     
 })->name('sword');
 
 
 // Run the app!
     $app->run();
-?>
