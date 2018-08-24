@@ -1,7 +1,7 @@
 <?php
 
+
     require __DIR__ . '/vendor/autoload.php';
-    //date_default_timezone_set('America/New_York');
 
     $app = new \Slim\Slim(array(
         'view' => new \Slim\Views\Twig()
@@ -16,10 +16,23 @@ $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
 );
 
-include '/classes/url.php';
+// This inclusion allows the call function I created for making curl calls.
+include '/classes/call.php';
 
-    session_start();
-    
+session_start();
+
+
+// Main routing for Index page.
+    $app->get('/', function() use($app){
+	 unset($_SESSION['json']);
+	 unset($_SESSION['apikey']);
+	 $app->render('index.twig', array(
+		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())
+	));
+})->name('index');
+
+
+// Routing for both GET and POST versions of the Lists page.
    $app->get('/lists', function() use($app){
 		$apikey = $_SESSION['apikey'];
 		$pageSize = 100;
@@ -35,17 +48,8 @@ include '/classes/url.php';
 		'json' => $json,
 		'pageSize' => $jsonCount,
 		'offset' => $offset
-));     
+	));     
 })->name('lists');
-
-
-    $app->get('/', function() use($app){
-	 unset($_SESSION['json']);
-	 unset($_SESSION['apikey']);
-	 $app->render('index.twig', array(
-		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())
-));
-})->name('index');
 
 
 	$app->post('/lists', function() use($app){
@@ -64,11 +68,10 @@ include '/classes/url.php';
 		'json' => $json,
 		'pageSize' => $jsonCount,
 		'offset' => $offset
-));     
+	));     
+});
 
-              });
-
-	
+// Routing for GET and POST versions of the Members page.
  $app->get('/members', function() use($app){
 	$listId = $app->request()->params('listId');
 	$offset = $app->request()->params('offset');
@@ -90,9 +93,8 @@ include '/classes/url.php';
 		'pageSize' => $pageSize,
 		'offset' => $offset,
 		'listId' => $listId,
-		'jsonCount' => $jsonCount
-		
-));     
+		'jsonCount' => $jsonCount		
+	));     
 })->name('members');
 
 
@@ -119,23 +121,18 @@ include '/classes/url.php';
 		'offset' => $offset,
 		'listId' => $listId,
 		'jsonCount' => $jsonCount
-));
+	));
 });
 
 
-
-
-
+// A little easter egg, for fun. :D
  $app->get('/sword', function() use($app){   
 	$app->render('sword.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod())   
-));     
+	));     
 })->name('sword');
 
 
-
-
-
-
+// Run the app!
     $app->run();
 ?>

@@ -3,7 +3,7 @@
 {% block topnav %}
 <table style="width: 40%">
 <tr>
-<td><a href="{{ urlFor('index') }}">back</a></td>
+<td width="10%"><a href="{{ urlFor('index') }}">back</a></td>
 <td><center>
 {% if json['total_items'] %}
 Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_items'] }}
@@ -11,7 +11,7 @@ Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_
 Displaying ? &#8212; ?? of ???
 {% endif %}
 </td></center>
-<td align="right"><a href="{{ urlFor('index') }}">log out</a></td>
+<td align="right" width="10%"><a href="{{ urlFor('index') }}">log out</a></td>
 </tr>
 </table>
 {% endblock topnav %}
@@ -30,8 +30,9 @@ Status: {{ json["status"] }}: {{ json["title"] }}
 <table style="outline: thin solid; width: 40%; border-collapse: collapse">
 <tr bgcolor="#6DC5DC">
 <td width="100%"><b>ERROR</b></td><tr><td>
-MY NAME IS ERROR
+I AM ERROR
 IT'S A SECRET TO EVERYONE
+GRUMBLE, GRUMBLE
 </tr>
 </table>
 {% else %}
@@ -40,11 +41,7 @@ IT'S A SECRET TO EVERYONE
 <td width="40%"><b>List Names</b></td>
 <td width="20%"><b>List IDs</b></td>
 <td width="2%"><b>Subscribers</b></td>
-<td width="2%"></td>
 </tr>
-
-
-
 
 {% set totalitems = (json["total_items"] - 1) %}
 
@@ -57,6 +54,3 @@ IT'S A SECRET TO EVERYONE
   {% endfor %}
 {% endif %}
 {% endblock content %}
-
-{% block botnav %}
-{% endblock botnav %}
