@@ -27,12 +27,13 @@ include '/classes/url.php';
 		$shard = substr($apikey, 33, strlen($apikey));
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
 		$json = json_decode(call($url, $apikey), 1);
+		$jsonCount = count($json['lists']);
 
 	$app->render('lists.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'api' => $apikey,
 		'json' => $json,
-		'pageSize' => $pageSize,
+		'pageSize' => $jsonCount,
 		'offset' => $offset
 ));     
 })->name('lists');
@@ -55,12 +56,13 @@ include '/classes/url.php';
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
 		$json = json_decode(call($url, $apikey), 1);
 		$_SESSION['apikey'] = $apikey;
+		$jsonCount = count($json['lists']);
 
 	$app->render('lists.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'api' => $apikey,
 		'json' => $json,
-		'pageSize' => $pageSize,
+		'pageSize' => $jsonCount,
 		'offset' => $offset
 ));     
 
@@ -75,19 +77,20 @@ include '/classes/url.php';
 	$shard = substr($apikey, 33, strlen($apikey));
 	$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists/" . $listId . '/members?count=' . $pageSize . '&offset=' . $offset;
 	$json = json_decode(call($url, $apikey), 1);	
-	
+	$jsonCount = count($json['members']);
 	if ($offset < 0) {
 		$offset = 0;
-	} elseif ($offset > ($json["total_items"] - $pageSize)) {
-		$offset = ($json["total_items"] - $pageSize);
+	} elseif ($offset > ($json["total_items"] - $jsonCount)) {
+		$offset = ($json["total_items"] - $jsonCount);
 	}
-
+	$jsonCount = count($json['members']);
 	$app->render('members.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'json' => $json,
 		'pageSize' => $pageSize,
 		'offset' => $offset,
-		'listId' => $listId
+		'listId' => $listId,
+		'jsonCount' => $jsonCount
 		
 ));     
 })->name('members');
@@ -105,15 +108,17 @@ include '/classes/url.php';
 		$json = json_decode(call($url, $apikey), 1);
 	if ($offset < 0) {
 		$offset = 0;
-	} elseif ($offset >= ($json["total_items"] - $pageSize)) {
-		$offset = ($json["total_items"] - $pageSize);
+	} elseif ($offset >= ($json["total_items"] - $jsonCount)) {
+		$offset = ($json["total_items"] - $jsonCount);
 	}
+		$jsonCount = count($json['members']);
 	$app->render('members.twig', array(
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
 		'json' => $json,
 		'pageSize' => $pageSize,
 		'offset' => $offset,
-		'listId' => $listId
+		'listId' => $listId,
+		'jsonCount' => $jsonCount
 ));
 });
 

@@ -28,10 +28,7 @@ IT'S DANGEROUS TO GO ALONE; TAKE <a href="{{ urlFor('sword') }}">THIS</a>
 <table style="outline: thin solid; width: 40%">
 
 
-
-{% set totalitems = (json["total_items"] - 1) %}
-
-{% for i in 0..(pageSize - 1) %}
+{% for i in 0..(jsonCount - 1) %}
 <tr style="outline: thin solid">
 <td width="70%">{{ json["members"][i]["email_address"] }}</td>
 <td width="30%">{{ json["members"][i]["status"] }}</td>

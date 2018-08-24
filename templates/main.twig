@@ -21,7 +21,7 @@ Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_
 {% elseif not json['total_items'] %}
 Displaying ? &#8212; ?? of ???
 {% else %}
-Displaying {{ (offset + 1) }} &#8212; {{ (offset + pageSize) }} of {{ json['total_items'] }}
+Displaying {{ (offset + 1) }} &#8212; {{ (offset + jsonCount) }} of {{ json['total_items'] }}
 {% endif %}
 </td></center>
 <td align="right" width="10%"><a href="{{ urlFor('index') }}">log out</a></td>
@@ -61,7 +61,7 @@ Displaying {{ offset + 1 }} &#8212; {{ json['total_items'] }} of {{ json['total_
 {% elseif not json['total_items'] %}
 Displaying ? &#8212; ?? of ???
 {% else %}
-Displaying {{ (offset + 1) }} &#8212; {{ (offset + pageSize) }} of {{ json['total_items'] }}
+Displaying {{ (offset + 1) }} &#8212; {{ (offset + jsonCount) }} of {{ json['total_items'] }}
 {% endif %}
 </center>
 </td>
