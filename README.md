@@ -34,3 +34,4 @@ This code was entirely written by Austin Sirkin, but I'd like to thanks these fo
 * Dave Morin
 * Andrew Someillan
 * David Hernandez
+* Joshua Lohrman
