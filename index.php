@@ -34,9 +34,10 @@ session_start();
 // Routing for both GET and POST versions of the Lists page.
    $app->get('/lists', function() use($app){
 		$apikey = $_SESSION['apikey'];
+		$apiArray = explode("-", $apikey);
 		$pageSize = 100;
 		$offset = 0;
-		$shard = substr($apikey, 33, strlen($apikey));
+		$shard = $apiArray[1];
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
 		$json = json_decode(call($url, $apikey), 1);
 		$jsonCount = count($json['lists']);
