@@ -20,7 +20,6 @@ include '/classes/call.php';
 
 session_start();
 
-
 // Main routing for Index page.
     $app->get('/', function() use($app){
 	 unset($_SESSION['json']);
@@ -54,13 +53,52 @@ session_start();
 
 	$app->post('/lists', function() use($app){
 		$apikey = $app->request->post("apikey");
+		$apiArray = explode("-", $apikey);
 		$pageSize = 100;
 		$offset = 0;
-		$shard = substr($apikey, 33, strlen($apikey));
+
+// Not the most elegant error handling here. Need to find a way to improve this.
+		if (isset($apiArray[1]) == false) {
+		exit("That didn't even look anything like an API key. <br>Come on, you can definitely do better than that. <br><a href=\"/mclv/\">Start over.</a>");
+}
+		$shard = $apiArray[1];
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists?count=9999";
 		$json = json_decode(call($url, $apikey), 1);
 		$_SESSION['apikey'] = $apikey;
 		$jsonCount = count($json['lists']);
+
+// This section is logging API key uses in a MySQL DB
+		$servername = "localhost:3307";
+		$username = "root";
+		$password = "";
+		$database = "mclv";
+		$SQLAPI = "$apiArray[0]" . "_" . "$apiArray[1]";
+		$sqlTest = "SELECT * FROM $SQLAPI";
+
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $database);
+		// Check connection
+		if ($conn->connect_error) {
+		    die("Connection failed: " . $conn->connect_error);
+		} 
+
+		if ($conn->query($sqlTest) == FALSE) {
+
+		$createTable = "CREATE TABLE $SQLAPI (
+		    connections int(255) unsigned auto_increment primary key,
+		    timestamp TIMESTAMP
+		)";
+
+
+		if ($conn->query($createTable) === TRUE) {
+		//    echo "Table created successfully";
+		} else {
+		//    echo "Error creating table: " . $conn->error;
+		} 
+
+		$conn->close();
+		}
+
 
 	$app->render('lists.twig', [
 		'lastMod' => date("F d, Y \a\\t h:i:s a e", getlastmod()),
@@ -76,8 +114,9 @@ session_start();
 	$listId = $app->request()->params('listId');
 	$offset = $app->request()->params('offset');
 	$apikey = $_SESSION['apikey'];
+	$apiArray = explode("-", $apikey);
 	$pageSize = 100;
-	$shard = substr($apikey, 33, strlen($apikey));
+	$shard = $apiArray[1];
 	$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists/" . $listId . '/members?count=' . $pageSize . '&offset=' . $offset;
 	$json = json_decode(call($url, $apikey), 1);	
 	$jsonCount = count($json['members']);
@@ -103,9 +142,10 @@ session_start();
 		$offset = $app->request()->params('offset');
 		$apikey = $_SESSION['apikey'];
 		$listId = $app->request->post("list");
+		$apiArray = explode("-", $apikey);
 		$pageSize = 100;
 		$offset = 0;
-		$shard = substr($apikey, 33, strlen($apikey));
+		$shard = $apiArray[1];
 		$url = "https://" . $shard . ".api.mailchimp.com/3.0/lists/" . $listId . '/members?count=' . $pageSize . '&offset=' . $offset;
 		$json = json_decode(call($url, $apikey), 1);
 	if ($offset < 0) {
