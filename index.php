@@ -15,7 +15,7 @@ $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
 );
 
-// This inclusion allows the call function I created for making curl calls.
+// This inclusion allows the call function I created for making curl calls. Requires parameters $url and $apikey.
 include '/classes/call.php';
 
 session_start();
