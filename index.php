@@ -32,6 +32,9 @@ session_start();
 
 // Routing for both GET and POST versions of the Lists page.
    $app->get('/lists', function() use($app){
+		if (isset($_SESSION['apikey']) == false) {
+		exit("It looks like you haven't entered an API key.<br><a href=\"/mclv/\">Start over</a> and enter an API key this time.");
+}
 		$apikey = $_SESSION['apikey'];
 		$apiArray = explode("-", $apikey);
 		$pageSize = 100;
@@ -81,8 +84,18 @@ include '/classes/logging.php';
 
 // Routing for GET and POST versions of the Members page.
  $app->get('/members', function() use($app){
+
+if (isset($_SESSION['apikey']) == false) {
+		exit("It looks like you haven't entered an API key.<br><a href=\"/mclv/\">Start over</a> and enter an API key this time.");
+}
+
+if ($app->request()->params('listId') == false) {
+		exit("Please select a valid list.<br><a href=\"/mclv/lists\">Go back</a> to the lists page and select a new list.");
+}
 	$listId = $app->request()->params('listId');
 	$offset = $app->request()->params('offset');
+
+
 	$apikey = $_SESSION['apikey'];
 	$apiArray = explode("-", $apikey);
 	$pageSize = 100;
